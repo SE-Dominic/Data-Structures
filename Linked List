@@ -81,3 +81,5 @@ class LinkedList {
     tmp->next = newNode;
     size++;
   }
+
+#endif
