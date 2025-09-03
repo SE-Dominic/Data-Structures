@@ -4,8 +4,6 @@ CS311
 
 Your name: Dominic Allen
 Your programmer number: 1
-Hours spent: ???
-Any difficulties?:
 *****************************/
 #ifndef GRAPH_H
 #define GRAPH_H
@@ -57,10 +55,9 @@ class graph
 //constructor: num is the number of vertices
 graph::graph(int num)
 {
-  num_ver = num; //num of vertices put into constructor variable
-  ver_ar = new list<edge*>[num_ver]; //dynamc array of linked lists which hold edge pointers
-  //make a dynamic array with num slots where each slot holds a list object. 
   //The element of a node in the linked list is a pointer to an edge object 
+  num_ver = num; //num of vertices put into constructor variable
+  ver_ar = new list<edge*>[num]; //dynamc array of linked lists which hold edge pointers 
 }
 
 graph::~graph()
@@ -104,13 +101,7 @@ void displayQueue(queue<T>& q)
 
 //start Traversal at start
 void graph::DFT(int start)
-{
-  //The algorithm is in my lecture notes.
-  //I made dynamic array called "num"
-  //I created a queue object of string data type from the library's queue class to save all the paths.
-  //I used do-while
-  //I am calling nextUnvisitedNodes() to see if there are more unvisited nodes.
-  //You could call displayQueue() implemented above to display all the paths. 
+{ 
   int* n = new int[num_ver]();
   int i = 1;
   queue<string> q;
@@ -125,11 +116,7 @@ void graph::DFT(int start)
   //Don't forget to destroy the dynamic array
   delete[] n;
 }
-
-//I made the following function to see if there are still unvisited nodes. Start looking at s, which is the one after the vertext we started last time. start point may not be 0. If start was 5, check the num array from index 6 then 7... until a zero is found (you may find a zero at index 1). Next time check from index 2.                                                                                            
-//num is the array of vertices                                                                                                          
-//start is the start vertex                                                                      
-//s is the vertext right after the vertex we started last time                                                                          
+                                                                      
 int graph::nextUnvisitedNodes(int* num, int start, int s)
 {
   //go through the num array from s to see if you find a vertext with num=0. If so, return the index. If all visited, return -1.
@@ -206,17 +193,6 @@ void graph::BFT(int start)
     }
 
     delete[] num;
-  //Use the queue class from the library
-  //I used another queue of strings to save all the paths. 
-
-  //I used do-while to visit all unconnected graphs. Call nextUnvisitedNodes() to check to see if there are more unvisited vertices.
-
-  //Check the specification to figure out what member functions of the queue class you need to use.
-  // https://www.cplusplus.com/reference/queue/queue/
-
-  //You could call show all paths by calling displayQueue()                                                                     
-
-  //Don't forget to destroy the dynamic array if you used one
 }
 
 #endif
