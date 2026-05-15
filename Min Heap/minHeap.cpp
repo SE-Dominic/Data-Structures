@@ -1,38 +1,46 @@
 #include <iostream>
 using namespace std;
 
+//prototypes
 template <typename T>
 class minHeap;
 
 template <typename T>
-ostream& operator<<(ostream& o, const minHeap<T>& _heap);
+ostream& operator<<(ostream& o, const minHeap<T>& _heap) {
+  for (int i = 0; i < _heap.num; i++) {
+    o << _heap[i] << " ";
+  }
+  o << endl;
+  return o;
+}
 
 template <typename T>
 void swap(T& a, T& b) {
-  T* temp = a;
+  T temp = a;
   a = b;
   b = temp;
 }
 
+//class implementation
 template <typename T>
 class minHeap {
   friend ostream& operator<<(ostream& o, const minHeap<T>& _heap);
 private:
   T* ar;
-  int capacity; //size of ar
-  int num; //num elements in ar
+  int capacity;
+  int num; //current number of elements in array
 public:
-  minHeap() {
+  minHeap() { //empty constructor
     this->capacity = 1;
     this->num = 0;
     this->ar = new T[capacity];
   }
-  minHeap(int c) {
+  minHeap(int c) { //set capacity constructor
     this->capacity = c;
     this->num = 0;
     this->ar = new T[c];
   }
-  ~minHeap() {
+  ~minHeap() { //destructor
     if (ar != NULL) {
       delete [] ar;
     }
@@ -40,7 +48,7 @@ public:
   void min_heapify(int i);
   void bubbleUp(int i);
   void insert(const T& el);
-  int find(const T& key) const;
+  int find(const T& key) const; //O(log(n))
   void remove(int i);
   T getMin();
   T& getElem(int i);
@@ -73,11 +81,11 @@ void minHeap<T>::min_heapify(int i) {
     int l = 2 * i + 1;
     int r = 2 * i + 2;
     int smallest = i;
-    if (ar[l] < ar[r] && ar[l] < ar[smallest]) {
+    if (l < num && ar[l] < ar[smallest]) {
       smallest = l;
     }
-    if (ar[r] < ar[l] && ar[r] < ar[smallest])
-    smallest = r;
+    if (r < num && ar[r] < ar[smallest])
+      smallest = r;
   }
   if (smallest != i) {
     swap(ar[smallest], ar[i]);
@@ -101,19 +109,10 @@ void minHeap<T>::insert(const T& val) {
 
 template <typename T>
 int minHeap<T>::find(const T& el) const {
-  int l, r;
-  l = 0;
-  r = num;
-  
-
-  while (l < r) {
-    int m = (r - l) / 2;
-    if (ar[m] == el) {
-      return m;
-    } else if (ar[m] < target) {
-      l = m + 1;
-    } else {
-      r = m - 1;
+  for (int i = 0; i < num; i++) {
+    if (ar[i] == el) {
+      cout << "Key found at: (" << i << ") " << endl;
+      return i;
     }
   }
   throw NotFound{}; //not found
@@ -121,7 +120,7 @@ int minHeap<T>::find(const T& el) const {
 
 template <typename T>
 void minHeap<T>::remove(int i) {
-  if (i < 0 || i > num) {
+  if (i < 0 || i >= num) {
     throw BadIndex{};
   }
   ar[i] = ar[num - 1]; //value gets replaced by last
