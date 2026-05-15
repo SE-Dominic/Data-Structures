@@ -8,7 +8,7 @@ class minHeap;
 template <typename T>
 ostream& operator<<(ostream& o, const minHeap<T>& _heap) {
   for (int i = 0; i < _heap.num; i++) {
-    o << _heap[i] << " ";
+    o << _heap.ar[i] << " ";
   }
   o << endl;
   return o;
@@ -56,12 +56,55 @@ public:
   int getCap() const;
   int getNum() const;
   void updateElem(int i, const T& newValue); //update the elemnt at index i                                      
-  
+  void print() const {
+    for (int i = 0; i < num; i++) {
+      cout << ar[i] << " ";
+    }
+  }
   class Underflow{};
   class Overflow{};
   class BadIndex{};
   class NotFound{};
 };
+
+template<typename T>
+T& minHeap<T>::getElem(int i) {
+  if (i < 0 || i >= num) {
+    throw BadIndex {};
+  }
+  return ar[i];
+}
+
+template <typename T>
+const T& minHeap<T>::getElem(int i) const {
+  if (i < 0 || i >= num) {
+    throw BadIndex {};
+  }
+  return ar[i];
+}
+
+template<typename T>
+int minHeap<T>::getCap() const {
+  return this->capacity;
+}
+
+template<typename T>
+int minHeap<T>::getNum() const {
+  return this->num;
+}
+
+template <typename T>
+void minHeap<T>::updateElem(int i, const T& newValue) {
+  if (i < 0 || i >= num) {
+    throw BadIndex {};
+  }
+  ar[i] = newValue;
+  if (i > 0 && ar[i] < ar[(i - 1) / 2]) { //checks if updated value is less than parent value
+    bubbleUp(i);
+  } else {
+    min_heapify(i); //heapify down if larger than children
+  }
+}
 
 template <typename T>
 void minHeap<T>::bubbleUp(int idx) {
@@ -77,30 +120,26 @@ void minHeap<T>::bubbleUp(int idx) {
 }
 template <typename T>
 void minHeap<T>::min_heapify(int i) {
-  if (ar != NULL) {
     int l = 2 * i + 1;
     int r = 2 * i + 2;
     int smallest = i;
+
     if (l < num && ar[l] < ar[smallest]) {
       smallest = l;
     }
-    if (r < num && ar[r] < ar[smallest])
+    if (r < num && ar[r] < ar[smallest]) {
       smallest = r;
-  }
-  if (smallest != i) {
-    swap(ar[smallest], ar[i]);
-    min_heapify(smallest); //recursively call function to fix heap
-  }
+    }
+    if (smallest != i) {
+      swap(ar[smallest], ar[i]);
+      min_heapify(smallest); //recursively call function to fix heap
+    }
 }
 
 template<typename T>
 void minHeap<T>::insert(const T& val) {
   if (num == capacity) {
     throw Overflow{};
-  }
-  if (capacity == 0) {
-    capacity = 1;
-    ar = new T[capacity];
   }
   ar[num] = val;
   num++;
@@ -125,9 +164,13 @@ void minHeap<T>::remove(int i) {
   }
   ar[i] = ar[num - 1]; //value gets replaced by last
   num--;
+  
+  if (num == 0) {
+    return;
+  }
   if (i > 0 && ar[i] < ar[(i - 1) / 2]) { //value < parent
     bubbleUp(i);
-  } else {
+  } else if (i < num) {
     min_heapify(i); //fix structure
   }
 }
